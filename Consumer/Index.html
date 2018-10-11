@@ -1,0 +1,124 @@
+﻿<!doctype html>
+<html lang="en" ng-app="theCountApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Days</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <link href="Styles/Consumer.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.7/angular.min.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <script src="Scripts/Consumer.js"></script>
+
+</head>
+
+<body ng-controller="theCountAppController">
+
+    <div class="site-wrapper" ng-view="">
+
+        <div class="site-wrapper-inner">
+
+            <div class="cover-container">
+
+                <header class="masthead clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">Days</h3>
+                        <nav class="nav nav-masthead">
+                            <a class="nav-link active" href="#" ng-click="OpenHome()">Home</a>
+                            <a class="nav-link" href="#" ng-if="isSignedIn === false" ng-click="OpenSignIn()">Sign In</a>
+                            <a class="nav-link" href="#" ng-if="isSignedIn === false" ng-click="OpenSignUp()">Sign Up</a>
+                        </nav>
+                    </div>
+                </header>
+
+                <main role="main" class="inner cover">
+                    <div id="divHome" ng-if="isSignedIn === false && isSignIn === false && isSignUp === false">
+                        <h1 class="cover-heading">Hey There!</h1>
+                        <p class="lead">{{ message }}</p>
+                        <p class="lead">
+                            <a href="#" class="btn btn-lg btn-secondary" ng-click="OpenSignIn()">Sign In</a>
+                        </p>
+                    </div>
+
+                    <div id="divList" ng-if="isSignedIn === true && isAdd === false">
+                        <h1 class="cover-heading">Your Wish Is My Command!</h1>
+                        <p class="lead">{{ message }}</p>
+
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" ng-repeat="event in eventList">
+                                <span><a href="#" class="badge badge-danger" ng-click="Delete(event.Key)">X</a></span>
+                                {{event.EventTitle}}
+                                <span class="badge badge-primary badge-pill" ng-show="event.IsCountDown === true">{{event.Days}} Days Away</span>
+                                <span class="badge badge-success badge-pill" ng-show="event.IsCountDown === false">{{event.Days}} Days Ago</span>
+                            </li>
+                        </ul>
+                        <br />
+                        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="OpenAdd()">Add</button>                        
+                    </div>
+
+                    <div id="divAdd" ng-if="isAdd === true">
+                        <h1 class="cover-heading">Add Something Wonderful!</h1>
+                        <p class="lead">{{ message }}</p>
+
+                        <form class="list-group">                            
+                            
+                            <input type="text" id="inputEvent" class="form-control" placeholder="Event, Something to Remember or Maybe Forget" ng-model="ApplicationEvent.EventTitle" required autofocus>
+                            <br />
+                            
+                            <input type="text" id="inputDate" class="form-control" placeholder="Date, Apologies, We Take Only MM/DD/YYYY" ng-model="ApplicationEvent.EventDate" required>
+                            <br />
+                            <button class="btn btn-lg btn-success btn-block" type="submit" ng-click="Add(ApplicationEvent)">Add</button>
+                        </form>
+
+                    </div>
+
+                    <div id="divSignIn" ng-if="isSignIn === true">
+                        <h1 class="cover-heading">Sign In!</h1>
+                        <p class="lead">{{ message }}</p>                        
+
+                        <form class="list-group">
+                            
+                            <input type="email" id="inputEmail" class="form-control" placeholder="Email Address, Can't Help You, If You Forget" ng-model="ApplicationUser.EmailID" required autofocus>
+                            <br />
+                            
+                            <input type="password" id="inputPassword" class="form-control" placeholder="Psst, Gimme the Password" ng-model="ApplicationUser.Password" required>
+                            <br />
+
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="SignIn(ApplicationUser)">Sign In</button>
+                        </form>
+
+                    </div>
+
+                    <div id="divSignUp" ng-if="isSignUp === true">
+                        <h1 class="cover-heading">Sign Up!</h1>
+                        <p class="lead">{{ message }}</p>
+
+                        <form class="list-group">
+                            
+                            
+                            <input type="email" id="inputEmail" class="form-control" placeholder="Email Address like myname@email.com or yourname@email.com" ng-model="ApplicationUser.EmailID" required autofocus>
+                            <br />
+                            
+                            <input type="password" id="inputPassword" class="form-control" placeholder="Password like maryhadaliitlelamb!" ng-model="ApplicationUser.Password" required>
+                            <br />
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="SignUp(ApplicationUser)">Sign Up</button>
+                        </form>
+
+                    </div>
+                </main>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
